@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { MdDelete, MdOutlineLightMode } from "react-icons/md";
 import { Checkbox } from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Main() {
   const [displayVal, setDisplayVal] = useState([]);
@@ -48,6 +49,12 @@ export default function Main() {
     if (filter === "active") return !checkedItems[task.id];
   });
 
+  const popLayout = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+    exit: { opacity: 0, scale: 0.8, transition: { duration: 0.5 } },
+  };
+
   const totalTasks = displayVal.length;
   const completedTasks = displayVal.filter(task => checkedItems[task.id]).length;
   const activeTasks = totalTasks - completedTasks;
@@ -57,9 +64,9 @@ export default function Main() {
       <div className='relative bg-black min-h-screen'>
         <div className='bg-cover h-[45vh]' style={{ backgroundImage: 'url(/bg-desktop-dark.jpg)' }}>
           <div className='flex flex-col justify-center items-center'>
-            <div className='flex justify-between flex-row w-[25.6vw] items-center'>
-              <h1 className='text-5xl font-extrabold text-white py-10'>TO DO</h1>
-              <span className='text-2xl cursor-pointer'><MdOutlineLightMode /></span>
+            <div className='flex items-center gap-20 md:gap-x-28'>
+              <h1 className='text-5xl font-extrabold text-white py-10 justify-start'>TO DO</h1>
+              <span className='text-2xl cursor-pointer justify-end'><MdOutlineLightMode /></span>
             </div>
             <div className=''>
               <input
@@ -71,26 +78,35 @@ export default function Main() {
               />
               <button onClick={handleClick} className='py-2 px-4 bg-[#00254E] text-white'>Add task</button>
               <ul>
-                {filteredTasks.map((task) => (
-                  <li
-                    key={task.id}
-                    className='bg-[#00254E] text-white py-2 text-center min-w-[25.6vw] justify-between flex pr-2 items-center border border-white-500'>
-                    <Checkbox
-                      className='bg-gray-300'
-                      checked={checkedItems[task.id] || false}
-                      onChange={() => handleCheck(task.id)}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                      sx={{
-                        color: 'white',
-                        '&.Mui-checked': {
+                <AnimatePresence>
+                  {filteredTasks.map((task) => (
+                    <motion.li
+                      key={task.id}
+                      className='bg-[#00254E] text-white py-2 text-center min-w-[25.6vw] justify-between flex pr-2 items-center border border-white-500'
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      variants={popLayout}
+                    >
+                      <Checkbox
+                        className='bg-gray-300'
+                        checked={checkedItems[task.id] || false}
+                        onChange={() => handleCheck(task.id)}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                        sx={{
                           color: 'white',
-                        },
-                      }}
-                    />
-                    {task.text}
-                    <MdDelete onClick={() => handleDelete(task.id)} />
-                  </li>
-                ))}
+                          '&.Mui-checked': {
+                            color: 'white',
+                          },
+                        }}
+                      />
+                      <div className='break-words w-52'><p>{task.text}</p></div>
+                      <MdDelete
+                        className='cursor-pointer text-xl'
+                        onClick={() => handleDelete(task.id)} />
+                    </motion.li>
+                  ))}
+                </AnimatePresence>
               </ul>
               <div className='flex flex-col items-center bg-[#00254E] min-w-[25.6vw] border border-white'>
                 <div className='text-[#94A4AB] mb-2'>
@@ -99,18 +115,18 @@ export default function Main() {
                   {filter === "active" && <p>Active: {activeTasks}</p>}
                 </div>
                 <ul className='flex justify-around w-full mb-4'>
-                  <li 
-                    onClick={() => setFilter("all")} 
+                  <li
+                    onClick={() => setFilter("all")}
                     className={`cursor-pointer ${filter === "all" ? "text-white" : "text-[#94A4AB]"}`}>
                     All
                   </li>
-                  <li 
-                    onClick={() => setFilter("completed")} 
+                  <li
+                    onClick={() => setFilter("completed")}
                     className={`cursor-pointer ${filter === "completed" ? "text-white" : "text-[#94A4AB]"}`}>
                     Completed
                   </li>
-                  <li 
-                    onClick={() => setFilter("active")} 
+                  <li
+                    onClick={() => setFilter("active")}
                     className={`cursor-pointer ${filter === "active" ? "text-white" : "text-[#94A4AB]"}`}>
                     Active
                   </li>
