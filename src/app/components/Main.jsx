@@ -74,15 +74,15 @@ export default function Main() {
                 onChange={(e) => setInputVal(e.target.value)}
                 placeholder='Add a task...'
                 value={inputVal}
-                className='bg-[#00254E] text-white py-2 min-w-[18vw] mr-3 mb-5 text-start pl-3'
+                className='bg-black text-white py-2 min-w-[18vw] mr-3 mb-5 text-start pl-3'
               />
-              <button onClick={handleClick} className='py-2 px-4 bg-[#00254E] text-white'>Add task</button>
+              <button onClick={handleClick} className='py-2 px-4 bg-black text-[#94A4AB]'>Add task</button>
               <ul>
                 <AnimatePresence>
                   {filteredTasks.map((task) => (
                     <motion.li
                       key={task.id}
-                      className='bg-[#00254E] text-white py-2 text-center min-w-[25.6vw] justify-between flex pr-2 items-center border border-white-500'
+                      className='bg-black text-white py-2 text-center min-w-[25.6vw] justify-between flex pr-2 items-center'
                       initial="hidden"
                       animate="visible"
                       exit="exit"
@@ -108,7 +108,7 @@ export default function Main() {
                   ))}
                 </AnimatePresence>
               </ul>
-              <div className='flex flex-col items-center bg-[#00254E] min-w-[25.6vw] border border-white'>
+              <div className='flex flex-col items-center bg-black min-w-[25.6vw]'>
                 <div className='text-[#94A4AB] mb-2'>
                   {filter === "all" && <p>All: {totalTasks}</p>}
                   {filter === "completed" && <p>Completed: {completedTasks}</p>}
