@@ -1,18 +1,20 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MdDelete, MdOutlineLightMode } from "react-icons/md";
 import { Checkbox } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useLocalStorage } from '../providers';
 
 export default function Main() {
-  const [displayVal, setDisplayVal] = useState([]);
+  const [displayVal, setDisplayVal] = useLocalStorage("tasks", []);
   const [inputVal, setInputVal] = useState("");
-  const [checkedItems, setCheckedItems] = useState({});
+  const [checkedItems, setCheckedItems] = useLocalStorage("checkedItems", {});
   const [filter, setFilter] = useState("all");
 
   const handleClick = () => {
     if (inputVal.trim() !== "") {
-      setDisplayVal([...displayVal, { id: Date.now(), text: inputVal }]);
+      const newTask = { id: Date.now(), text: inputVal };
+      setDisplayVal([...displayVal, newTask]);
       setInputVal("");
     }
   };
